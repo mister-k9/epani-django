@@ -19,7 +19,7 @@ def home(request):
             total_income += order.amount
             total_volume += order.volume_in_ml
 
-        total_volume_in_l = total_volume / 1000
+        total_volume_in_l = total_volume
     
         context = {
             'machines_count': machines.count(),
