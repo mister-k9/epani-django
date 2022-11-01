@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<!-- ========================= SECTION  ========================= -->
+<section class="section-name padding-y-sm" style="min-height:100vh">
+	<div class="container">
+		<br>
+		<div class="row">
+			<div class="col-md-4">
+				<a href="/epani/?filter=all">
+					<div class="bcard">
+						<h4 class="card-header text-center ">All Machines</h4>
+						<div class="card-body">
+						  <div class="sub-text text-center">
+							<b>{{machines_count}}</b>
+						  </div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="/epani/?filter=online">
+				<div class="bcard">
+					<h4 class="card-header text-center">Online Machines </h4>
+					<div class="card-body">
+					  <div class="sub-text text-center">
+						<b>{{machines_online}}</b>
+					  </div>
+					</div>
+				</div>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="/epani/?filter=offline">
+				<div class="bcard">
+					<h4 class="card-header text-center">Offline Machines</h4>
+					<div class="card-body">
+					  <div class="sub-text text-center">
+						<b>{{machines_offline}}</b>
+					  </div>
+					</div>
+				</div>
+				</a>
+			</div>
+		</div>
+		<br>
+		<br>
+
+		<div class="bcard">
+            <h4 class="card-header text-muted">Today</h4>
+            <div class="card-body">
+             
+                <div class="row">
+					<div class="col-md-4">
+						<div class="bcard">
+							<h4 class="card-header text-center bg-dark" style="color:white;">Total Orders</h4>
+							<div class="card-body">
+							  <div class="sub-text text-center">
+								<b>{{orders_count}}</b>
+							  </div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="bcard">
+							<h4 class="card-header text-center bg-dark" style="color:white;">Water Dispensed</h4>
+							<div class="card-body">
+							  <div class="sub-text text-center">
+								<b>{{total_volume}} L</b>
+							  </div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="bcard">
+							<h4 class="card-header text-center bg-dark" style="color:white;">Total Income</h4>
+							<div class="card-body">
+							  <div class="sub-text text-center">
+								<b> &#x20B9; {{total_income}} /-</b>
+							  </div>
+							</div>
+						</div>
+					</div>
+				</div>
+              
+            </div>
+        </div>
+	</div><!-- container // -->
+</section>
+<!-- ========================= SECTION  END// ========================= -->
+
+
+ 
+
+</body>
+
+</html>
+
+{% endblock %}

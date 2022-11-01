@@ -1,0 +1,115 @@
+{% load static %}
+{% include 'base.html' %}
+
+{% block content %}
+
+<body>
+
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            {% include 'includes/dnavbar.html' %}
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    {% include 'includes/sidebar.html' %}
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>Today</h5>
+                                                        <div class="card-header-right">
+                                                            <ul class="list-unstyled card-option">
+                                                                <li><i class="fa fa fa-wrench open-card-option"></i>
+                                                                </li>
+                                                                <li><i class="fa fa-window-maximize full-card"></i></li>
+                                                                <li><i class="fa fa-minus minimize-card"></i></li>
+                                                                <li><i class="fa fa-refresh reload-card"></i></li>
+                                                                <li><i class="fa fa-trash close-card"></i></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="d-flex mt-3" style="justify-content:space-around;">
+
+                                                            <div class="col-xl-3 col-md-6">
+                                                                <div class="card" style="border:1px solid #448aff;">
+                                                                    <div class="card-block">
+                                                                        <div class="d-flex">
+                                                                            <h6>No.of Orders
+                                                                            </h6>
+                                                                            <h4 class="text-c-purple ml-auto">
+                                                                                {{orders_count}}</h4>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-3 col-md-6">
+                                                                <div class="card" style="border:1px solid #448aff;">
+                                                                    <div class="card-block">
+                                                                        <div class="d-flex">
+                                                                            <h6>Water Dispened
+                                                                            </h6>
+                                                                            <h4 class="text-c-purple ml-auto">
+                                                                                {{total_volume}} L</h4>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-3 col-md-6">
+                                                                <div class="card" style="border:1px solid #448aff;">
+                                                                    <div class="card-block">
+                                                                        <div class="d-flex">
+                                                                            <h6 class="">Total Income
+                                                                            </h6>
+                                                                            <h4 class="text-c-purple ml-auto">&#8360;
+                                                                                {{total_income}} /-</h4>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Page-body end -->
+                            </div>
+                            {% comment %} <div id="styleSelector"> </div> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Chart js -->
+    <script type="text/javascript" src="{% static 'assets/js/chart.js/Chart.js'%}"></script>
+    <!-- amchart js -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="{% static 'assets/pages/widget/amchart/gauge.js'%}"></script>
+    <script src="{% static 'assets/pages/widget/amchart/serial.js'%}"></script>
+    <script src="{% static 'assets/pages/widget/amchart/light.js'%}"></script>
+    <script src="{% static 'assets/pages/widget/amchart/pie.min.js'%}"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <!-- menu js -->
+    <script src="{% static 'assets/js/pcoded.min.js'%}"></script>
+    <script src="{% static 'assets/js/vertical-layout.min.js'%} "></script>
+    <!-- custom js -->
+    <script type="text/javascript" src="{% static 'assets/pages/dashboard/custom-dashboard.js'%}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/script.js'%} "></script>
+
+</body>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+<nav class="pcoded-navbar">
+    <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+    <div class="pcoded-inner-navbar main-menu">
+        <ul class="p-2">
+            {% if not 'epani' in request.path %}
+            <li>
+                <a href="/" class="waves-effect waves-dark"
+                    style="border-radius:5px;background:#448aff;font-style:bold;color:white;padding:18px;display:flex;">
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="/epani/?filter=all" class="waves-effect waves-dark"
+                    style="font-style:bold;padding:18px;display:flex;">
+                    Machines
+                </a>
+            </li>
+            {% else %}
+            <li>
+                <a href="/" class="waves-effect waves-dark"
+                    style="font-style:bold;padding:18px;display:flex;">
+                    Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="/epani/?filter=all" class="waves-effect waves-dark"
+                    style="border-radius:5px;background:#448aff;font-style:bold;color:white;padding:18px;display:flex;">
+                    Machines
+                </a>
+            </li>
+            {% endif %}
+            {% if user.is_admin %}
+            <li>
+                <a href="/epani/?filter=all" class="waves-effect waves-dark"
+                    style="font-style:bold;padding:18px;display:flex;">
+                    Users
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+
+    </div>
+</nav>
