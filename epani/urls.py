@@ -10,4 +10,6 @@ urlpatterns = [
     path('order/', views.order, name='order'),
     path('card/', views.card, name='card'),
     path('machine/', views.machine, name='machine'),
+    path('cards/edit_card/', views.edit_card, name='edit_card'),
+    
 ]

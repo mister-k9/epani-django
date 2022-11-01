@@ -22,7 +22,7 @@
                   <div class="page-body">
                     <div class="row">
                       <div class="col-xl-4 col-md-6">
-                        <a href="{{request.get_full_path}}">
+                        <a href="/epani/cards/?machine_id={{machine_id}}&filter=all">
                           <div class="card">
                             <div class="card-block">
                               <div class=" d-flex">
@@ -64,9 +64,11 @@
                     <div class="card">
                       <div class="card-header d-flex align-items-center">
                         <h5>CARDS</h5>
+                        {% if user.is_admin %}
                         <a href={% url 'card' %} class="btn btn-primary text-center ml-auto text-white">
                           ADD
                         </a>
+                        {% endif %}
                       </div>
                       <div class="card-block table-border-style">
                         <div class="table-responsive">
@@ -76,11 +78,11 @@
                                 <th>Card Number</th>
                                 <th>Holder Name</th>
                                 <th>Balance</th>
-                                <th>Machine Id</th>
+                                {% comment %} <th>Machine Id</th> {% endcomment %}
                                 <th>Last Recharge</th>
-                                <th>Last Txn Volume</th>
+                                {% comment %} <th>Last Txn Volume</th>
                                 <th>Last Txn Status</th>
-                                <th>Last Txn TimeStamp</th>
+                                <th>Last Txn TimeStamp</th> {% endcomment %}
                                 <th>Orders</th>
                                 <th>Actions</th>
                               </tr>
@@ -88,20 +90,20 @@
                             <tbody>
                               {% for card in cards %}
                               <tr>
-                                <td>{{card.card_number}}</td>
+                                <td>{{card.id}}</td>
                                 <td>{{card.holder_name}}</td>
                                 <td>&#x20B9; {{card.balance}} /-</td>
-                                <td>{{card.machine_id}}</td>
+                                {% comment %} <td>{{card.machine_id}}</td> {% endcomment %}
 
                                 <td>{{card.last_recharge_amount}}</td>
-                                <td>{{card.last_txn_volume}}</td>
+                                {% comment %} <td>{{card.last_txn_volume}}</td>
                                 <td>{{card.last_txn_status}}</td>
-                                <td>{{card.last_txn_timestamp}}</td>
+                                <td>{{card.last_txn_timestamp}}</td> {% endcomment %}
                                 <td>{{card.orders_count}}</td>
                                 <td>
-                                  <a href="#" class="btn-secondary p-2 text-white">
+                                   <a href="/epani/cards/edit_card/?card_number={{card.card_number}}" class="btn-secondary p-2 text-white">
                                     EDIT
-                                  </a>
+                                  </a> 
                                   <a href="/epani/orders/?card_number={{card.card_number}}"
                                     class="btn-primary p-2 text-white ml-1">
                                     ORDERS

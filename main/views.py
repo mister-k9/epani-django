@@ -8,8 +8,8 @@ from epani.models import Machine
 def home(request):
     if request.user.is_admin:
         machines = Machine.objects.all()
-        machines_offline = Machine.objects.all().filter(machine_status='OFFLINE')
-        machines_online = Machine.objects.all().filter(machine_status='ONLINE')
+        machines_offline = Machine.objects.filter(machine_status='OFFLINE')
+        machines_online = Machine.objects.filter(machine_status='ONLINE')
 
         orders = Order.objects.all()
 
@@ -36,7 +36,7 @@ def home(request):
     machines_offline = Machine.objects.filter(machine_status='OFFLINE', user=request.user)
     machines_online = Machine.objects.filter(machine_status='ONLINE', user=request.user)
 
-    orders = Order.objects.filter(user=request.user)
+    orders = Order.objects.all()
 
     total_income = 0
     total_volume = 0.0

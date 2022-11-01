@@ -87,7 +87,7 @@ def cards(request):
     if not filter == 'ALL':
             cards = Card.objects.filter(machine_id=machine_id,card_status=filter)
     else:
-            cards = Machine.objects.all(machine_id=machine_id)
+            cards = Card.objects.filter(machine_id=machine_id)
 
     cards_active = Card.objects.filter(machine_id=machine_id,card_status='ACTIVE')
     cards_inactive = Card.objects.filter(machine_id=machine_id,card_status='INACTIVE')
@@ -102,6 +102,7 @@ def cards(request):
         'filter': filter,
         'active_url':active_url,
         'inactive_url':inactive_url,
+        'machine_id':machine_id
     }
 
     return render(request, 'epani/cards.html', context)
@@ -186,5 +187,26 @@ def machine(request):
         return redirect('/')
 
     return render(request, 'epani/machine.html')
+
+
+def edit_card(request):
+
+    card_number = request.GET['card_number']
+
+    card = Card.objects.get(card_number=card_number)
+
+    if request.method == 'POST':
+        
+        card.holder_name = request.POST['holder_name']
+        card.balance = request.POST['balance']
+        card.save()
+
+        return redirect('/')
+
+    context = {
+        'card':card
+    }
+
+    return render(request, 'epani/edit_card.html', context)
 
 

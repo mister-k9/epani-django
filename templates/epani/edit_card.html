@@ -1,0 +1,75 @@
+{% load static %}
+{% include 'base.html' %}
+
+{% block content %}
+
+<body>
+
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            {% include 'includes/dnavbar.html' %}
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    {% include 'includes/sidebar.html' %}
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Card {{card.id}}</h5>
+                                                <!--<span>Add class of <code>.form-control</code> with <code>&lt;input&gt;</code> tag</span>-->
+                                            </div>
+                                            <div class="card-block">
+                                                <form class="form-material" action="/epani/cards/edit_card/?card_number={{card.card_number}}" method='POST'>
+                                                    {% csrf_token %}
+                                                    
+                                                   
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="holder_name" class="form-control" value="{{card.holder_name}}"
+                                                            required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Holder Name</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="balance" class="form-control" value="{{card.balance}}"
+                                                            required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Balance</label>
+                                                    </div>
+                                                   
+                                                    
+                                                    
+
+                                                    <button type="submit" class="btn btn-primary float-right">SUBMIT</button>
+                                                    
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div><!-- page-body end -->
+                                </div>
+                                {% comment %} <div id="styleSelector"> </div> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- menu js -->
+    <script src="{% static 'assets/js/pcoded.min.js'%}"></script>
+    <script src="{% static 'assets/js/vertical-layout.min.js'%} "></script>
+    <!-- custom js -->
+    <script type="text/javascript" src="{% static 'assets/pages/dashboard/custom-dashboard.js'%}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/script.js'%} "></script>
+
+</body>
+
+{% endblock %}

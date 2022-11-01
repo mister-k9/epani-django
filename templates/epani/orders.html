@@ -25,42 +25,46 @@
 
                     <div class="card">
                       <div class="card-header d-flex align-items-center">
-                        <h5>ORDERS</h5>
+                        <h5>TRANSACTIONS</h5>
+                        {% if user.is_admin %}
                         <a href="/epani/order/" class="btn btn-primary text-center ml-auto text-white">
                           ADD
                         </a>
+                        {% endif %}
                       </div>
                       <div class="card-block table-border-style">
                         <div class="table-responsive">
                           <table class="table">
                             <thead>
                               <tr>
-                                <th>Order Id</th>
-                                <th>Card Number</th>
-                                <th>Machine Id</th>
-                                <th>Amount</th>
+                                {% comment %} <th>Id</th> {% endcomment %}
+                                {% comment %} <th>Card Number</th> {% endcomment %}
+                                {% comment %} <th>Machine Id</th> {% endcomment %}
                                 <th>Volume (ml)</th>
+                                <th>Amount</th>
                                 <th>Order Status</th>
                                 <th>Sync Status</th>
                                 <th>Local Timestamp</th>
+                                {% if user.is_admin %}
                                 <th>Actions</th>
+                                {% endif %}
                               </tr>
                             </thead>
                             <tbody>
                               {% for order in orders %}
                               <tr>
-                                <td>{{order.order_id}}</td>
-                                <td>{{order.card_number}}</td>
-                                <td>{{order.machine_id}}</td>
+                                {% comment %} <td>{{order.id}}</td> {% endcomment %}
+                                {% comment %} <td>{{order.card_number}}</td> {% endcomment %}
+                               {% comment %} <td>{{order.machine_id}}</td> {% endcomment %}
+                               <td>{{order.volume_in_ml}}</td>
                                 <td>&#x20B9; {{order.amount}} /-</td>
-                                <td>{{order.volume_in_ml}}</td>
                                 <td>{{order.order_status}}</td>
                                 <td>{{order.sync_status}}</td>
                                 <td>{{order.local_timestamp}}</td>
-                                <td> 
+                                {% comment %} <td> 
                                   <a href="#" class="btn-secondary p-2 text-white">
                                     EDIT
-                                  </a></td>
+                                  </a></td> {% endcomment %}
                               </tr>
                               {% endfor %}
                             </tbody>

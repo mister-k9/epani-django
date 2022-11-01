@@ -20,6 +20,7 @@
                 <div class="page-wrapper">
                   <!-- Page-body start -->
                   <div class="page-body">
+                    {% if user.is_admin %}
                     <div class="row">
                       <div class="col-xl-4 col-md-6">
                         <a href="/epani/?filter=all">
@@ -61,16 +62,20 @@
                       </div>
 
                     </div>
+                    {% endif %}
                     <div class="card">
                       <div class="card-header">
 
                         <div class="d-flex align-items-center">
+                          {% if user.is_admin %}
                           <h5>{{filter}} MACHINES</h5>
                           
                           <a href="{% url 'machine' %}" class="btn btn-primary text-center ml-auto text-white">
                             ADD
                           </a>
-                         
+                          {% else %}
+                          <h5>NANDANAVANAM PLANT</h5>
+                          {% endif %}
                         </div>
 
                       </div>
@@ -81,7 +86,9 @@
                               <tr>
                                 <th>Machine Id</th>
                                 <th>Machine Location</th>
+                                {% if user.is_admin %}
                                 <th>Machine Token</th>
+                                {% endif %}
                                 <th>Machine Status</th>
                                 <th>No.of Cards</th>
                                 <th>Actions</th>
@@ -92,14 +99,17 @@
                               <tr>
                                 <td>{{machine.machine_id}}</td>
                                 <td>{{machine.machine_location}}</td>
+                                {% if user.is_admin %}
                                 <td>{{machine.machine_token}}</td>
+                                {% endif %}
                                 <td>{{machine.machine_status}}</td>
                                 <td>{{machine.cards_count}} </td>
                                 <td>
-
+                                  {% comment %} {% if user.is_admin %}
                                   <a href="#" class="btn-secondary p-2 text-white">
                                     EDIT
                                   </a>
+                                  {% endif %} {% endcomment %}
                                   <a href="/epani/cards/?machine_id={{machine.machine_id}}&filter=all"
                                     class="btn-primary p-2 text-white ml-1">
                                     CARDS
