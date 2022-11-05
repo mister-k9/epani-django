@@ -56,3 +56,9 @@ def home(request):
         'total_income':total_income,
     }
     return render(request, 'dashboard.html', context)
+
+
+def sidebar(request):
+    
+    pass
+# get cards of the machine assigned to user

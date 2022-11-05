@@ -2,42 +2,91 @@
     <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
     <div class="pcoded-inner-navbar main-menu">
         <ul class="p-2">
-            {% if not 'epani' in request.path %}
+
+
             <li>
                 <a href="/" class="waves-effect waves-dark"
-                    style="border-radius:5px;background:#448aff;font-style:bold;color:white;padding:18px;display:flex;">
+                    style="border-radius:5px;{% if request.path == '/' %}background:#448aff;color:white;{% endif %}font-style:bold;padding:18px;display:flex;">
                     Dashboard
                 </a>
             </li>
+            {% if user.is_user %}
             <li>
-                <a href="/epani/?filter=all" class="waves-effect waves-dark"
-                    style="font-style:bold;padding:18px;display:flex;">
-                    Machines
+                <a href="/epani/cards/?machine_id={{user.machine_id}}&filter=active" class="waves-effect waves-dark"
+                    style="border-radius:5px;font-style:bold;padding:18px;display:flex;{% if request.path == '/epani/cards/' %}background:#448aff;color:white;{% endif %}">
+                    Cards
                 </a>
             </li>
-            {% else %}
-            <li>
-                <a href="/" class="waves-effect waves-dark"
-                    style="font-style:bold;padding:18px;display:flex;">
-                    Dashboard
-                </a>
-            </li>
+            {% endif %}
+            {% if user.is_cluster or user.is_admin %}
             <li>
                 <a href="/epani/?filter=all" class="waves-effect waves-dark"
-                    style="border-radius:5px;background:#448aff;font-style:bold;color:white;padding:18px;display:flex;">
+                    style="border-radius:5px;font-style:bold;padding:18px;display:flex;{% if request.path == '/epani/' or request.path == '/epani/machine/' or request.path == '/epani/edit_machine/' or request.path == '/epani/cards/' or request.path == '/epani/orders/' or request.path == '/epani/order/' %}background:#448aff;color:white;{% endif %}">
                     Machines
                 </a>
             </li>
             {% endif %}
             {% if user.is_admin %}
             <li>
-                <a href="/epani/?filter=all" class="waves-effect waves-dark"
-                    style="font-style:bold;padding:18px;display:flex;">
+                <a href="/epani/clusters/" class="waves-effect waves-dark" style="border-radius:5px;font-style:bold;padding:18px;display:flex;{% if request.path == '/epani/clusters/' or  request.path == '/epani/new_cluster/' or request.path == '/epani/edit_cluster/' or request.path == '/epani/cluster/'%}background:#448aff;color:white;{% endif %}">
+                    Clusters
+                </a>
+            </li>
+            
+            <li>
+                <a href="/epani/users/?filter=machine" class="waves-effect waves-dark" style="border-radius:5px;font-style:bold;padding:18px;display:flex;{% if request.path == '/epani/users/' or request.path == '/accounts/register/' or request.path == '/epani/edit_user/' %}background:#448aff;color:white;{% endif %}">
                     Users
                 </a>
             </li>
             {% endif %}
+
+
         </ul>
 
     </div>
 </nav>
+
+
+{% comment %}
+
+{% if not 'epani' in request.path %}
+
+<li>
+    <a href="/epani/?filter=all" class="waves-effect waves-dark" style="font-style:bold;padding:18px;display:flex;">
+        Machines
+    </a>
+</li>
+
+
+{% else %}
+<li>
+    <a href="/" class="waves-effect waves-dark" style="font-style:bold;padding:18px;display:flex;">
+        Dashboard
+    </a>
+</li>
+<li>
+    <a href="/epani/?filter=all" class="waves-effect waves-dark"
+        style="border-radius:5px;background:#448aff;font-style:bold;color:white;padding:18px;display:flex;">
+        Machines
+    </a>
+</li>
+
+{% endif %}
+{% if user.is_admin %}
+<li>
+    <a href="/epani/users/" class="waves-effect waves-dark" style="font-style:bold;padding:18px;display:flex;">
+        Users
+    </a>
+</li>
+{% endif %}
+
+{% if user.is_user %}
+<li>
+    <a href="/epani/cards/?machine_id={{user.machine_id}}&filter=active" class="waves-effect waves-dark"
+        style="font-style:bold;padding:18px;display:flex;">
+        Cards
+    </a>
+</li>
+{% endif %}
+
+{% endcomment %}

@@ -1,0 +1,125 @@
+{% load static %}
+{% include 'base.html' %}
+
+{% block content %}
+
+<body>
+
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            {% include 'includes/dnavbar.html' %}
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    {% include 'includes/sidebar.html' %}
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <div class="d-flex align-items-center">
+                                                    <h5>CLUSTER {{cluster.name}}</h5>
+                                                    <div class="ml-auto">
+                                                        <a href="/epani/edit_cluster/?id={{cluster.id}}"
+                                                            class="btn btn-primary">
+                                                            EDIT
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <form class="form-material"
+                                                    action="/epani/cluster/?id={{cluster.id}}" method='POST'>
+                                                    {% csrf_token %}
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-1 col-form-label">Machine</label>
+                                                        <div class="col-sm-10">
+                                                            <select name="machine-select" class="form-control">
+                                                                <option value=""> Select Machine</option>
+                                                                {% for id in mac_ids %}
+                                                                <option value="{{id}}">{{id}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <button type="submit"
+                                                            class="btn btn-primary float-right">ADD</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="card-block table-border-style">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Machine Id</th>
+                                                                <th>Token</th>
+                                                                <th>User</th>
+                                                                <th>Location</th>
+                                                                <th>Status</th>
+                                                                <th>Cards</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for machine in macs %}
+                                                            <tr>
+                                                                <td>{{machine.machine_id}}</td>
+                                                               
+                                                                <td>{{machine.machine_token}}</td>
+                                                                <td>{{machine.user}}</td>
+                                                                <td>{{machine.machine_location}}</td>
+                                                                <td>{{machine.machine_status}}</td>
+                                                                <td>{{machine.cards_count}} </td>
+                                                                <td>
+                                                                    
+                                                                    <a href="/epani/edit_machine/?machine_id={{machine.machine_id}}"
+                                                                        class="btn-primary p-2">
+                                                                        EDIT
+                                                                    </a>
+                                                                   
+                                                                    <a href="/epani/cards/?machine_id={{machine.machine_id}}&filter=active"
+                                                                        class="btn-primary p-2 ml-1">
+                                                                        CARDS
+                                                                    </a>
+
+
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Page-body end -->
+                                </div>
+                                {% comment %} <div id="styleSelector"> </div> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- menu js -->
+    <script src="{% static 'assets/js/pcoded.min.js'%}"></script>
+    <script src="{% static 'assets/js/vertical-layout.min.js'%} "></script>
+    <!-- custom js -->
+    <script type="text/javascript" src="{% static 'assets/pages/dashboard/custom-dashboard.js'%}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/script.js'%} "></script>
+
+</body>
+
+{% endblock %}

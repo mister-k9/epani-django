@@ -23,42 +23,45 @@
 
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5>NEW MACHINE</h5>
+                                                <h5>EDIT CLUSTER</h5>
                                             </div>
                                             <div class="card-block">
-                                                <form class="form-material" action={% url 'machine' %} method='POST'>
+                                                <form class="form-material"
+                                                    action="/epani/edit_cluster/?id={{cluster.id}}"
+                                                    method='POST'>
                                                     {% csrf_token %}
-                                                    <div class="form-group form-default">
-                                                        <input type="text" name="machine_id" class="form-control"
-                                                            required="">
-                                                        <span class="form-bar"></span>
-                                                        <label class="float-label">Machine Id</label>
-                                                    </div>
-                                                    
-                                                    <div class="form-group form-default">
-                                                        <input type="text" name="machine_location" class="form-control"
-                                                            required="">
-                                                        <span class="form-bar"></span>
-                                                        <label class="float-label">Machine Location</label>
-                                                    </div>
-                                                    <div class="form-group form-default">
-                                                        <input type="text" name="machine_token" class="form-control"
-                                                            required="">
-                                                        <span class="form-bar"></span>
-                                                        <label class="float-label">Machine Token</label>
-                                                    </div>
-                                                   
-                                                    <div class="form-group form-default">
-                                                        <input type="text" name="machine_status" class="form-control"
-                                                            required="">
-                                                        <span class="form-bar"></span>
-                                                        <label class="float-label">Machine Status</label>
-                                                    </div>
-                                                   
 
-                                                    <button type="submit" class="btn btn-primary float-right">SUBMIT</button>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="name" class="form-control"
+                                                            value="{{cluster.name}}" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Cluster Name</label>
+                                                    </div>
                                                     
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-1 col-form-label">User</label>
+                                                        <div class="col-sm-11">
+                                                            <select name="user-select" class="form-control">
+                                                                <option value="{{cluster.user.id}}"> {% if not cluster.user %} Select User
+                                                                    {% else %} {{cluster.user}} {% endif %} </option>
+                                                                {% if not cluster.user %}
+                                                                {% for user in users %}
+                                                                <option value="{{user.id}}">{{user}}</option>
+                                                                {% endfor %}
+                                                                {% else %}
+                                                                {% for user in excluding_c_user_users %}
+                                                                <option value="{{user.id}}">{{user}}</option>
+                                                                {% endfor %}
+                                                                {% endif %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="submit"
+                                                        class="btn btn-primary float-right">SUBMIT</button>
+
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div><!-- page-body end -->

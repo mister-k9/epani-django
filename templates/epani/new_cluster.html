@@ -23,37 +23,30 @@
 
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5>CARD {{card.id}}</h5>
+                                                <h5>NEW CLUSTER</h5>
                                             </div>
                                             <div class="card-block">
-                                                <form class="form-material" action="/epani/cards/edit_card/?card_number={{card.card_number}}" method='POST'>
+                                                <form class="form-material" action={% url 'new_cluster' %} method='POST'>
                                                     {% csrf_token %}
-                                                    
                                                     <div class="form-group form-default">
-                                                        <input type="text" name="holder-name" class="form-control" value="{{card.holder_name}}"
-                                                            required="">
+                                                        <input type="text" name="name" class="form-control" required="">
                                                         <span class="form-bar"></span>
-                                                        <label class="float-label">Holder Name</label>
-                                                    </div>
-                                                    <div class="form-group form-default">
-                                                        <input type="text" name="balance" class="form-control" value="{{card.balance}}"
-                                                            required="">
-                                                        <span class="form-bar"></span>
-                                                        <label class="float-label">Balance</label>
+                                                        <label class="float-label">Cluster Name</label>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label class="col-sm-1 col-form-label">Status</label>
+                                                        <label class="col-sm-1 col-form-label">User</label>
                                                         <div class="col-sm-11">
-                                                            <select name="card-status" class="form-control">
-                                                                <option value="{{card.card_status}}">{{card.card_status}}</option>
-                                                                {% for choice in card_status_choices %}
-                                                                <option value="{{choice}}">{{choice}}</option>
+                                                            <select name="user-select" class="form-control">
+                                                                <option value="">None</option>
+                                                                {% for user in users %}
+                                                                <option value="{{user.id}}">{{user}}</option>
                                                                 {% endfor %}
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary float-right">SUBMIT</button>
-                                                    
+                                                    <button type="submit"
+                                                        class="btn btn-primary float-right">SUBMIT</button>
+
                                                 </form>
                                             </div>
                                         </div>

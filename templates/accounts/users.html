@@ -1,0 +1,124 @@
+{% load static %}
+{% include 'base.html' %}
+
+{% block content %}
+
+<body>
+
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            {% include 'includes/dnavbar.html' %}
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    {% include 'includes/sidebar.html' %}
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+                                        
+                                        <div class="row">
+                                            <div class="col-xl-6 col-md-6">
+                                                <a href="/epani/users/?filter=machine">
+                                                    <div class="card">
+                                                        <div class="card-block">
+                                                            <div class=" d-flex">
+                                                                <h6 class="">Machine Users</h6>
+                                                                <h4 class="text-c-green ml-auto">{{machine_users_count}}
+                                                                </h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="col-xl-6 col-md-6">
+                                                <a href="/epani/users/?filter=cluster">
+                                                    <div class="card">
+                                                        <div class="card-block">
+                                                            <div class=" d-flex">
+                                                                <h6 class="">Cluster Users</h6>
+                                                                <h4 class="text-c-red ml-auto">{{cluster_users_count}}</h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card">
+                                            <div class="card-header">
+
+                                                <div class="d-flex align-items-center">
+
+                                                    <h5>{{filter}} USERS</h5>
+                                                    <div class="ml-auto">
+                                                        <a href="{% url 'register' %}" class="btn btn-primary ">
+                                                            NEW
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="card-block table-border-style">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Email Address</th>
+                                                                <th>Username</th>
+                                                                <th>First Name</th>
+                                                                <th>Last Name</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for usr in users %}
+                                                            <tr>
+                                                                <td>{{usr.email}}</td>
+                                                                <td>{{usr.username}}</td>
+                                                                <td>{{usr.first_name}}</td>
+                                                                <td>{{usr.last_name}} </td>
+                                                                <td>
+                                                                    <a href="/epani/edit_user/?id={{usr.id}}"
+                                                                        class="btn-primary p-2">
+                                                                        EDIT
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      
+                                    </div>
+
+                                    <!-- Page-body end -->
+                                </div>
+                                {% comment %} <div id="styleSelector"> </div> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- menu js -->
+    <script src="{% static 'assets/js/pcoded.min.js'%}"></script>
+    <script src="{% static 'assets/js/vertical-layout.min.js'%} "></script>
+    <!-- custom js -->
+    <script type="text/javascript" src="{% static 'assets/pages/dashboard/custom-dashboard.js'%}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/script.js'%} "></script>
+
+</body>
+
+{% endblock %}

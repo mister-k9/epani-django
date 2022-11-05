@@ -34,6 +34,7 @@ class Card(models.Model):
     CARD_STATUS = (
         ('ACTIVE', 'ACTIVE'),
         ('INACTIVE', 'INACTIVE'),
+        ('BLOCKED', 'BLOCKED')
     )
     card_number = models.CharField(max_length=27,unique=True)
     card_status = models.CharField(max_length=27,choices=CARD_STATUS,default='ACTIVE')
@@ -75,11 +76,18 @@ class Machine(models.Model):
     def cards_count(self):
         return (Card.objects.all().filter(machine_id=self.machine_id)).count()
 
-# class User(models.Model):
-#     machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True)
 
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
+class Cluster(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
+    machines = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
 
 
 

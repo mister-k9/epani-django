@@ -20,102 +20,113 @@
                 <div class="page-wrapper">
                   <!-- Page-body start -->
                   <div class="page-body">
-                    <div class="row">
-                      <div class="col-xl-4 col-md-6">
-                        <a href="/epani/cards/?machine_id={{machine_id}}&filter=all">
-                          <div class="card">
-                            <div class="card-block">
-                              <div class=" d-flex">
-                                <h6 class="">All Cards</h6>
-                                <h4 class="text-c-purple ml-auto">{{cards_count}}
-                                </h4>
+                    {% if machine_id == "" %}
+                    <h1>NO MACHINE IS ASSIGNED </h1>
+                    {% else %}
+                    <div>
+                      <div class="row">
+                        <div class="col-xl-4 col-md-6">
+                          <a href="{{active_url}}">
+                            <div class="card">
+                              <div class="card-block">
+                                <div class=" d-flex">
+                                  <h6 class="">Active Cards</h6>
+                                  <h4 class="text-c-purple ml-auto">{{active_cards_count}}
+                                  </h4>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div class="col-xl-4 col-md-6">
-                        <a href="{{active_url}}">
-                          <div class="card">
-                            <div class="card-block">
-                              <div class=" d-flex">
-                                <h6 class="">Active Cards</h6>
-                                <h4 class="text-c-green ml-auto">{{cards_active}}
-                                </h4>
+                          </a>
+                        </div>
+                        <div class="col-xl-4 col-md-6">
+                          <a href="{{inactive_url}}">
+                            <div class="card">
+                              <div class="card-block">
+                                <div class=" d-flex">
+                                  <h6 class="">Inactive Cards</h6>
+                                  <h4 class="text-c-green ml-auto">{{inactive_cards_count}}
+                                  </h4>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div class="col-xl-4 col-md-6">
-                        <a href="{{inactive_url}}">
-                          <div class="card">
-                            <div class="card-block">
-                              <div class=" d-flex">
-                                <h6 class="">Inactive Cards</h6>
-                                <h4 class="text-c-red ml-auto">{{cards_inactive}}</h4>
+                          </a>
+                        </div>
+                        <div class="col-xl-4 col-md-6">
+                          <a href="{{blocked_url}}">
+                            <div class="card">
+                              <div class="card-block">
+                                <div class=" d-flex">
+                                  <h6 class="">Blocked Cards</h6>
+                                  <h4 class="text-c-red ml-auto">{{blocked_cards_count}}</h4>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </a>
-                      </div>
+                          </a>
+                        </div>
 
-                    </div>
-                    <div class="card">
-                      <div class="card-header d-flex align-items-center">
-                        <h5>CARDS</h5>
-                        {% if user.is_admin %}
-                        <a href={% url 'card' %} class="btn btn-primary text-center ml-auto text-white">
-                          ADD
-                        </a>
-                        {% endif %}
                       </div>
-                      <div class="card-block table-border-style">
-                        <div class="table-responsive">
-                          <table class="table">
-                            <thead>
-                              <tr>
-                                <th>Card Number</th>
-                                <th>Holder Name</th>
-                                <th>Balance</th>
-                                {% comment %} <th>Machine Id</th> {% endcomment %}
-                                <th>Last Recharge</th>
-                                {% comment %} <th>Last Txn Volume</th>
-                                <th>Last Txn Status</th>
-                                <th>Last Txn TimeStamp</th> {% endcomment %}
-                                <th>Orders</th>
-                                <th>Actions</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {% for card in cards %}
-                              <tr>
-                                <td>{{card.id}}</td>
-                                <td>{{card.holder_name}}</td>
-                                <td>&#x20B9; {{card.balance}} /-</td>
-                                {% comment %} <td>{{card.machine_id}}</td> {% endcomment %}
+                      <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                          <h5>{{filter}} CARDS</h5>
+                          {% if user.is_admin %}
+                          <a href={% url 'card' %} class="btn btn-primary text-center ml-auto text-white">
+                            NEW
+                          </a>
+                          {% endif %}
+                        </div>
+                        <div class="card-block table-border-style">
+                          <div class="table-responsive">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th>Card Number</th>
+                                  <th>Holder Name</th>
+                                  <th>Balance</th>
+                                  {% comment %} <th>Machine Id</th> {% endcomment %}
+                                  <th>Last Recharge</th>
+                                  {% comment %} <th>Last Txn Volume</th>
+                                  <th>Last Txn Status</th>
+                                  <th>Last Txn TimeStamp</th> {% endcomment %}
+                                  <th>Transactions</th>
+                                  <th>Status</th>
+                                  <th>Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {% for card in cards %}
+                                <tr>
+                                  <td>{{card.id}}</td>
+                                  <td>{{card.holder_name}}</td>
+                                  <td>&#x20B9; {{card.balance}} /-</td>
+                                  {% comment %} <td>{{card.machine_id}}</td> {% endcomment %}
 
-                                <td>{{card.last_recharge_amount}}</td>
-                                {% comment %} <td>{{card.last_txn_volume}}</td>
-                                <td>{{card.last_txn_status}}</td>
-                                <td>{{card.last_txn_timestamp}}</td> {% endcomment %}
-                                <td>{{card.orders_count}}</td>
-                                <td>
-                                   <a href="/epani/cards/edit_card/?card_number={{card.card_number}}" class="btn-secondary p-2 text-white">
-                                    EDIT
-                                  </a> 
-                                  <a href="/epani/orders/?card_number={{card.card_number}}"
-                                    class="btn-primary p-2 text-white ml-1">
-                                    ORDERS
-                                  </a>
-                                </td>
-                              </tr>
-                              {% endfor %}
-                            </tbody>
-                          </table>
+                                  <td>{{card.last_recharge_amount}}</td>
+                                  {% comment %} <td>{{card.last_txn_volume}}</td>
+                                  <td>{{card.last_txn_status}}</td>
+                                  <td>{{card.last_txn_timestamp}}</td> {% endcomment %}
+                                  <td>{{card.orders_count}}</td>
+                                  <td>{{card.card_status}}</td>
+                                  <td>
+                                    {% if user.is_admin %}
+                                    <a href="/epani/cards/edit_card/?card_number={{card.card_number}}"
+                                      class="btn-primary p-2 ">
+                                      EDIT
+                                    </a>
+                                    {% endif %}
+                                    <a href="/epani/orders/?card_number={{card.card_number}}"
+                                      class="btn-primary p-2 ml-1">
+                                      TRANSACTIONS
+                                    </a>
+                                  </td>
+                                </tr>
+                                {% endfor %}
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    {% endif %}
                   </div>
                   <!-- Page-body end -->
                 </div>

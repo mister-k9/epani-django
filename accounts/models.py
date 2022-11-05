@@ -43,9 +43,11 @@ class MyAccountManager(BaseUserManager):
 class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50, unique=True)
+    username = models.CharField(max_length=50)
     email = models.CharField(max_length=100,unique=True)
     phone_number = models.CharField(max_length=50)
+    machine_id = models.CharField(max_length=50,blank=True)
+    cluster_id = models.CharField(max_length=50,blank=True)
 
     # required
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -67,7 +69,7 @@ class Account(AbstractBaseUser):
         return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
-        return self.username
+        return self.email
 
     def has_perm(self, perm, obj=None):
         return self.is_admin

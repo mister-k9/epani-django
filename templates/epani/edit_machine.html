@@ -1,0 +1,109 @@
+{% load static %}
+{% include 'base.html' %}
+
+{% block content %}
+
+<body>
+
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            {% include 'includes/dnavbar.html' %}
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    {% include 'includes/sidebar.html' %}
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>EDIT MACHINE</h5>
+                                            </div>
+                                            <div class="card-block">
+                                                <form class="form-material"
+                                                    action="/epani/edit_machine/?machine_id={{machine.machine_id}}"
+                                                    method='POST'>
+                                                    {% csrf_token %}
+
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="machine-id" class="form-control"
+                                                            value="{{machine.machine_id}}" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Machine Id</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="machine-token" class="form-control"
+                                                            value="{{machine.machine_token}}" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Machine Token</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="machine-status" class="form-control"
+                                                            value="{{machine.machine_status}}" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Machine Status</label>
+                                                    </div>
+                                                    <div class="form-group form-default">
+                                                        <input type="text" name="machine-location" class="form-control"
+                                                            value="{{machine.machine_location}}" required="">
+                                                        <span class="form-bar"></span>
+                                                        <label class="float-label">Machine Location</label>
+                                                    </div>
+
+
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-1 col-form-label">User</label>
+                                                        <div class="col-sm-11">
+                                                            <select name="user-select" class="form-control">
+                                                                <option value="{{machine.user.id}}"> {% if not machine.user %} Select User
+                                                                    {% else %} {{machine.user}} {% endif %} </option>
+                                                                {% if not machine.user %}
+                                                                {% for user in users %}
+                                                                <option value="{{user.id}}">{{user}}</option>
+                                                                {% endfor %}
+                                                                {% else %}
+                                                                {% for user in excluding_mac_user_users %}
+                                                                <option value="{{user.id}}">{{user}}</option>
+                                                                {% endfor %}
+                                                                {% endif %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                    <button type="submit"
+                                                        class="btn btn-primary float-right">SUBMIT</button>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div><!-- page-body end -->
+                                </div>
+                                {% comment %} <div id="styleSelector"> </div> {% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- menu js -->
+    <script src="{% static 'assets/js/pcoded.min.js'%}"></script>
+    <script src="{% static 'assets/js/vertical-layout.min.js'%} "></script>
+    <!-- custom js -->
+    <script type="text/javascript" src="{% static 'assets/pages/dashboard/custom-dashboard.js'%}"></script>
+    <script type="text/javascript" src="{% static 'assets/js/script.js'%} "></script>
+
+</body>
+
+{% endblock %}
