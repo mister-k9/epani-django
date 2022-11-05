@@ -14,8 +14,7 @@ class CardSerializer(serializers.ModelSerializer):
             'last_recharge_amount',
             'last_txn_volume',
             'last_txn_status',
-            'created_at',
-            'updated_at'
+            'last_txn_timestamp'
         ]
 
 class OrderSerializer(serializers.ModelSerializer):

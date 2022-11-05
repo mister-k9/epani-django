@@ -218,6 +218,8 @@ def edit_card(request):
 
         card.holder_name = request.POST['holder-name']
         card.card_status = request.POST['card-status']
+        if card.balance < int(request.POST['balance']):
+            card.last_recharge_amount = int(request.POST['balance']) - card.balance
         card.balance = request.POST['balance']
         card.save()
 

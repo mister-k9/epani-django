@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 import json
+from datetime import datetime
 from django.forms.models import model_to_dict
 from epani.models import Card, Order, Machine
 from epani.serializers import CardSerializer, OrderSerializer, MachineSerializer
@@ -9,163 +10,88 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from django.views import View
 
-from api.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-
 @api_view(["GET"])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def api_home(request, *args, **kwargs):
+def deduct_card_balance(request):
     if request.method == 'GET':
-        instance = Card.objects.all()
-        print(instance)
-        if instance:
-            serializer = CardSerializer(instance, many=True)
-            return Response(serializer.data)
+        card_num = request.GET['cno']
+        amount = int(request.GET['am'])
+        txn_stmp = request.GET['txn_ts']
+        mid = request.GET['mid']
+        mtoken = request.GET['mtoken']
+        try:
+            machine = Machine.objects.get(machine_id=mid)
+            if not mtoken == machine.machine_token:
+                return Response('Invalid Request!')
+            
+            card = Card.objects.get(card_number=card_num)
+            if not card.card_status == 'ACTIVE':
+                return Response('Invalid Card')
+            if card.balance >= amount:
+                f_bal = card.balance - amount
+                card.balance = f_bal
+                card.last_txn_timestamp = txn_stmp
+                card.save()
+                return Response({'balance':card.balance,'name':card.holder_name})
+            else:
+                return Response('Insufficent Balance')
+        
+        except Exception as e:
+            print(e)
+            if 'Machine' in str(e):
+                return Response('Invalid Machine')
+            if 'Card' in str(e):
+                return Response('Invalid Card')
+            
 
-  
 
-@api_view(["GET"])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def get_card_detail(request):
+@api_view(["GET","POST"])
+def get_cards(request):
     if request.method == 'GET':
-        card_num = request.GET['cardno']
-        instance = Card.objects.get(card_number=card_num)
-        print(instance)
-        if instance:
-            serializer = CardSerializer(instance, many=True)
-            return Response(serializer.data)
-
-    
-
-    
-
-
-@api_view(["GET", "POST"])
-def machine_cards(request, *args, **kwargs):
-    if request.method == "GET":
-        machine_id = request.GET['machine_id']
-        print(machine_id)
-        instance = Card.objects.all().filter(machine_id=machine_id)
-        if instance:
-            data = CardSerializer(instance, many=True)
-            print(data.data)
-
-        return Response(data)
-
-    # return HttpResponse("404 Page Not Found")
+        
+        mid = request.GET['mid']
+        mtoken = request.GET['mtoken']
+        try:
+            machine = Machine.objects.get(machine_id=mid)
+            if not mtoken == machine.machine_token:
+                return Response('Invalid Request!')
+            
+            cards = Card.objects.filter(machine_id=machine.machine_id)
+            if cards:
+                serializer = CardSerializer(cards, many=True)
+                return Response(serializer.data)
+            else:
+                return Response('No cards')
+        
+        except Exception as e:
+            print(e)
+            if 'Machine' in str(e):
+                return Response('Invalid Machine')
 
 
-
-class CardListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Card.objects.all()
-    serializer_class = CardSerializer
-    
-    # authentication_classes = [authentication.SessionAuthentication]
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-
-class CardDetailAPIView(generics.RetrieveAPIView):
-    queryset = Card.objects.all()
-    serializer_class = CardSerializer
-    lookup_field = 'card_number'
-
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-
-class CardUpdateAPIView(generics.UpdateAPIView):
-    queryset = Card.objects.all()
-    serializer_class = CardSerializer
-    lookup_field = 'card_number'
-
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def perform_update(self, serializer):
-        serializer.save()
+    if request.method == 'POST':
+        json_data = json.loads(request.body) 
+        cards = json_data['data']
+        for local_card_data in cards:
+            instance = Card.objects.get(card_number=local_card_data['card_number'])
+            online_card_data = (CardSerializer(instance)).data
+            if online_card_data['last_txn_timestamp']:
+                onl_datetime = datetime.strptime(((online_card_data['last_txn_timestamp'].split('.'))[0]), "%Y-%m-%d %H:%M:%S")
+                loc_datetime = datetime.strptime(((local_card_data['last_txn_timestamp'].split('.'))[0]), "%Y-%m-%d %H:%M:%S")
+                if loc_datetime > onl_datetime:
+                    instance.balance = local_card_data['balance']
+                    instance.last_txn_volume = local_card_data['last_txn_volume']
+                    instance.last_txn_status = local_card_data['last_txn_status']
+                    instance.last_txn_timestamp = local_card_data['last_txn_timestamp']
+                    instance.save()
+                   
+                # IF ONLINE DB > LOCAL DB UPDATE LOCAL DB
+                # IF TRANSACTION DONE ON OTHER MACHINE
+                
+            
+        
+        return Response('POSTED')
+            
+            
+        
 
 
-class CardDestroyAPIView(generics.DestroyAPIView):
-    queryset = Card.objects.all()
-    serializer_class = CardSerializer
-    lookup_field = 'card_number'
-
-    def perform_destroy(self, instance):
-        super().perform_destroy(instance)
-
-
-class OrderListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    
-    def perform_create(self, serializer):
-        serializer.save()
-
-
-class OrderDetailAPIView(generics.RetrieveAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    lookup_field = 'order_id'
-
-
-class OrderUpdateAPIView(generics.UpdateAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    lookup_field = 'order_id'
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-
-class OrderDestroyAPIView(generics.DestroyAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    lookup_field = 'order_id'
-
-    def perform_destroy(self, instance):
-        super().perform_destroy(instance)
-
-
-class MachineListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Machine.objects.all()
-    serializer_class = MachineSerializer
-    # authentication_classes = [authentication.SessionAuthentication]
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-
-class MachineDetailAPIView(generics.RetrieveAPIView):
-    queryset = Machine.objects.all()
-    serializer_class = MachineSerializer
-    lookup_field = 'machine_id'
-
-
-class MachineUpdateAPIView(generics.UpdateAPIView):
-    queryset = Machine.objects.all()
-    serializer_class = MachineSerializer
-    lookup_field = 'machine_id'
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-
-class MachineDestroyAPIView(generics.DestroyAPIView):
-    queryset = Machine.objects.all()
-    serializer_class = MachineSerializer
-    lookup_field = 'machine_id'
-
-    def perform_destroy(self, instance):
-        super().perform_destroy(instance)
