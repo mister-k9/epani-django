@@ -37,28 +37,28 @@ def epani(request):
 
     elif request.user.is_cluster:
         clus_id = request.user.cluster_id
-        clus = Cluster.objects.get(id=clus_id)
+        if clus_id:
+            clus = Cluster.objects.get(id=clus_id)
+            temp = list(clus.machines.split('|'))
+            cluster_machines = [x for x in temp if x != '']
+            macs = []
+            for id in cluster_machines:
+                temp = {}
+                machine = Machine.objects.get(machine_id=id)
+                temp['machine_id'] = machine.machine_id
+                temp['machine_token'] = machine.machine_token
+                temp['machine_status'] = machine.machine_status
+                temp['machine_location'] = machine.machine_location
+                temp['user'] = machine.user
+                temp['cards_count'] = machine.cards_count()
 
-        temp = list(clus.machines.split('|'))
-        cluster_machines = [x for x in temp if x != '']
-        macs = []
-        for id in cluster_machines:
-            temp = {}
-            machine = Machine.objects.get(machine_id=id)
-            temp['machine_id'] = machine.machine_id
-            temp['machine_token'] = machine.machine_token
-            temp['machine_status'] = machine.machine_status
-            temp['machine_location'] = machine.machine_location
-            temp['user'] = machine.user
-            temp['cards_count'] = machine.cards_count()
+                macs.append(temp)
+           
 
-            macs.append(temp)
-        print(macs)
-
-        context= {
-            'machines': macs,
-        }
-        return render(request, 'epani/machines.html', context)
+            context= {
+                'machines': macs,
+            }
+            return render(request, 'epani/machines.html', context)
     
     else:
         HttpResponse('Invalid Request')
@@ -212,7 +212,7 @@ def edit_card(request):
     card_number = request.GET['card_number']
 
     card = Card.objects.get(card_number=card_number)
-    print(card_number)
+    
 
     if request.method == 'POST':
 
@@ -230,7 +230,7 @@ def edit_card(request):
         if choice == card.card_status:
             card_status_choices.remove(choice)
 
-    print(card_status_choices)
+    
     context = {
         'card': card,
         'card_status_choices': card_status_choices
@@ -319,8 +319,6 @@ def edit_user(request):
             if clust.id == usr.cluster_id:continue
             excluding_user_c_cs.append(clust)
 
-    print(excluding_user_c_cs)
-
     if request.method == 'POST':
 
         usr.first_name = request.POST['first-name']
@@ -367,10 +365,13 @@ def new_cluster(request):
         cluster = Cluster()
         if user_id:
             user = Account.objects.get(id=user_id)
+            
             cluster.user = user
         cluster.name = request.POST['name']
         try:
             cluster.save()
+            user.cluster_id = cluster.id
+            user.save()
 
         except Exception as e:
             return HttpResponse(e)
@@ -400,6 +401,8 @@ def edit_cluster(request):
     if request.method == 'POST':
         user_id = request.POST['user-select']
         user = Account.objects.get(id=user_id)
+        user.cluster_id = cluster.id
+        user.save()
 
         cluster.user = user
         cluster.name = request.POST['name']
@@ -433,8 +436,7 @@ def cluster(request):
         temp['cards_count'] = machine.cards_count()
 
         macs.append(temp)
-    print(macs)
-
+    
     
     # is_assigned option into machines model
     mac_ids = []

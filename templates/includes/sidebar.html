@@ -13,7 +13,7 @@
             {% if user.is_user %}
             <li>
                 <a href="/epani/cards/?machine_id={{user.machine_id}}&filter=active" class="waves-effect waves-dark"
-                    style="border-radius:5px;font-style:bold;padding:18px;display:flex;{% if request.path == '/epani/cards/' %}background:#448aff;color:white;{% endif %}">
+                    style="border-radius:5px;font-style:bold;padding:18px;display:flex;{% if request.path == '/epani/cards/' or request.path == '/epani/orders/' %}background:#448aff;color:white;{% endif %}">
                     Cards
                 </a>
             </li>
