@@ -11,7 +11,6 @@ class CardSerializer(serializers.ModelSerializer):
             'machine_id',
             'holder_name',
             'balance',
-            'last_recharge_amount',
             'last_txn_volume',
             'last_txn_status',
             'last_txn_timestamp'
