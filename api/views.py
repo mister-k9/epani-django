@@ -10,6 +10,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.response import Response
 from django.views import View
 
+from random import randint
+
 @api_view(["GET"])
 def deduct_card_balance(request):
     if request.method == 'GET':
@@ -33,7 +35,7 @@ def deduct_card_balance(request):
                 card.save()
                 return Response({'balance':card.balance,'name':card.holder_name})
             else:
-                return Response('Insufficent Balance')
+                return Response({'balance':card.balance,'name':card.holder_name})
         
         except Exception as e:
             print(e)
@@ -46,8 +48,7 @@ def deduct_card_balance(request):
 
 @api_view(["GET","POST"])
 def get_cards(request):
-    if request.method == 'GET':
-        
+    if request.method == 'GET': 
         mid = request.GET['mid']
         mtoken = request.GET['mtoken']
         try:
@@ -61,9 +62,8 @@ def get_cards(request):
                 return Response(serializer.data)
             else:
                 return Response('No cards')
-        
         except Exception as e:
-            print(e)
+            #print(e)
             if 'Machine' in str(e):
                 return Response('Invalid Machine')
 
@@ -90,6 +90,41 @@ def get_cards(request):
             
         
         return Response('POSTED')
+
+
+@api_view(["POST"])
+def create_order(request):
+    
+    if request.method == 'POST':
+        mid = request.GET['mid']
+        mtoken = request.GET['mtoken']
+        json_data = json.loads(request.body)
+    
+        try:
+            machine = Machine.objects.get(machine_id=mid)
+            if not mtoken == machine.machine_token:
+                return Response('Invalid Request!')
+        except Exception as e:
+            #print(e)
+            if 'Machine' in str(e):
+                return Response('Invalid Machine')
+
+        value = randint(0, 1000000)
+
+        order = Order()
+        order.order_id = value
+        order.machine_id = mid
+        order.card_number = json_data['card_number']
+        order.order_status = json_data['order_status']
+        order.amount = json_data['amount']
+        order.volume_in_ml = json_data['volume_in_ml']
+        order.sync_status = 'SYNCED'
+        order.local_timestamp = json_data['local_timestamp']
+        order.save()
+
+        return Response('Successful!')
+
+        
             
             
         
