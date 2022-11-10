@@ -12,30 +12,44 @@ from django.views import View
 
 from random import randint
 
-@api_view(["GET"])
+@api_view(["POST"])
 def deduct_card_balance(request):
-    if request.method == 'GET':
-        card_num = request.GET['cno']
-        amount = int(request.GET['am'])
-        txn_stmp = request.GET['txn_ts']
-        mid = request.GET['mid']
-        mtoken = request.GET['mtoken']
+    if request.method == 'POST':
+        json_data=json.loads(request.body)
+        mid = json_data['mid']
+        mtoken = json_data['mtoken']
+        
         try:
             machine = Machine.objects.get(machine_id=mid)
             if not mtoken == machine.machine_token:
                 return Response('Invalid Request!')
             
-            card = Card.objects.get(card_number=card_num)
+            card = Card.objects.get(card_number=json_data['cno'])
             if not card.card_status == 'ACTIVE':
                 return Response('Invalid Card')
-            if card.balance >= amount:
-                f_bal = card.balance - amount
+            if card.balance >=  json_data['am']:
+                f_bal = card.balance -  json_data['am']
                 card.balance = f_bal
-                card.last_txn_timestamp = txn_stmp
+                card.last_txn_timestamp = json_data['txn_ts']
                 card.save()
-                return Response({'balance':card.balance,'name':card.holder_name})
+
+                value = randint(0, 1000000)
+                order_status = 'DONE_PAYMENT'
+
+                order = Order()
+                order.order_id = value
+                order.machine_id = mid
+                order.card_number = json_data['cno']
+                order.order_status = order_status
+                order.amount = json_data['am']
+                order.volume_in_ml = json_data['volume_in_ml']
+                order.sync_status = 'SYNCED'
+                order.local_timestamp = json_data['txn_ts']
+                order.save()
+
+                return Response({'balance':card.balance,'name':card.holder_name,'order_created':True})
             else:
-                return Response({'balance':card.balance,'name':card.holder_name})
+                return Response({'balance':card.balance,'name':card.holder_name,'order_created':False})
         
         except Exception as e:
             print(e)
