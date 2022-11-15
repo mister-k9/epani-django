@@ -11,6 +11,10 @@ from rest_framework.response import Response
 from django.views import View
 
 from random import randint
+import time
+
+# importing celery tasks
+from .celery_tasks import *
 
 @api_view(["POST"])
 def deduct_card_balance(request):
@@ -28,27 +32,28 @@ def deduct_card_balance(request):
             if not card.card_status == 'ACTIVE':
                 return Response('Invalid Card')
             if card.balance >=  json_data['am']:
+                value = randint(0, 1000000)
+                order_status = 'DONE_PAYMENT'
+                order_details = {
+                    'order_id':value,
+                    'mid': mid,
+                    'cno':json_data['cno'],
+                    'order_status':order_status,
+                    'am':json_data['am'],
+                    'volume':json_data['volume_in_ml'],
+                    'sync_status':'SYNCED',
+                    'timestamp':json_data['txn_ts']
+                }
+                celery_create_order(order_details)
+
                 f_bal = card.balance -  json_data['am']
                 card.balance = f_bal
                 card.last_txn_timestamp = json_data['txn_ts']
                 card.save()
-
-                value = randint(0, 1000000)
-                order_status = 'DONE_PAYMENT'
-
-                order = Order()
-                order.order_id = value
-                order.machine_id = mid
-                order.card_number = json_data['cno']
-                order.order_status = order_status
-                order.amount = json_data['am']
-                order.volume_in_ml = json_data['volume_in_ml']
-                order.sync_status = 'SYNCED'
-                order.local_timestamp = json_data['txn_ts']
-                order.save()
-
+                
                 return Response({'balance':card.balance,'name':card.holder_name,'order_created':True})
             else:
+                sleepy(10)
                 return Response({'balance':card.balance,'name':card.holder_name,'order_created':False})
         
         except Exception as e:
@@ -106,37 +111,7 @@ def get_cards(request):
         return Response('POSTED')
 
 
-@api_view(["POST"])
-def create_order(request):
-    
-    if request.method == 'POST':
-        mid = request.GET['mid']
-        mtoken = request.GET['mtoken']
-        json_data = json.loads(request.body)
-    
-        try:
-            machine = Machine.objects.get(machine_id=mid)
-            if not mtoken == machine.machine_token:
-                return Response('Invalid Request!')
-        except Exception as e:
-            #print(e)
-            if 'Machine' in str(e):
-                return Response('Invalid Machine')
 
-        value = randint(0, 1000000)
-
-        order = Order()
-        order.order_id = value
-        order.machine_id = mid
-        order.card_number = json_data['card_number']
-        order.order_status = json_data['order_status']
-        order.amount = json_data['amount']
-        order.volume_in_ml = json_data['volume_in_ml']
-        order.sync_status = 'SYNCED'
-        order.local_timestamp = json_data['local_timestamp']
-        order.save()
-
-        return Response('Successful!')
 
         
             

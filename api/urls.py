@@ -6,5 +6,4 @@ from . import views
 urlpatterns = [
     path('deduct_card_balance/', views.deduct_card_balance),
     path('get_cards/', views.get_cards),
-    path('create_order/', views.create_order)
 ]
