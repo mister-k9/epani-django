@@ -24,6 +24,7 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home,name='home'),
+    path('qr/',views.qr,name='qr'),
     path('api/', include('api.urls')),
     path('epani/', include('epani.urls')),
     path('accounts/', include('accounts.urls')),

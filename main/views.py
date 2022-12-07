@@ -62,3 +62,6 @@ def sidebar(request):
     
     pass
 # get cards of the machine assigned to user
+
+def qr(request):
+    return render(request, 'qr.html')
