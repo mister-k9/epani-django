@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render
 from accounts.models import Account
 
 from epani.models import Machine, Card, Order, Cluster
+from django.contrib.auth.decorators import login_required
 
 
 from .serializers import MachineSerializer
@@ -10,7 +11,7 @@ from .serializers import MachineSerializer
 
 # Create your views here.
 
-
+@login_required(login_url='login')
 def epani(request):
 
     filter = (request.GET['filter']).upper()
@@ -63,7 +64,7 @@ def epani(request):
     else:
         HttpResponse('Invalid Request')
 
-
+@login_required(login_url='login')
 def cards(request):
     filter = (request.GET['filter']).upper()
     machine_id = request.GET['machine_id']
@@ -126,7 +127,7 @@ def cards(request):
 
     return render(request, 'epani/cards.html', context)
 
-
+@login_required(login_url='login')
 def orders(request):
 
     card_number = request.GET['card_number']
@@ -138,7 +139,7 @@ def orders(request):
 
     return render(request, 'epani/orders.html', context)
 
-
+@login_required(login_url='login')
 def order(request):
 
     if request.method == 'POST':
@@ -162,7 +163,7 @@ def order(request):
 
     return render(request, 'epani/order.html')
 
-
+@login_required(login_url='login')
 def card(request):
 
     if request.method == 'POST':
@@ -184,7 +185,7 @@ def card(request):
 
     return render(request, 'epani/card.html')
 
-
+@login_required(login_url='login')
 def machine(request):
 
     if request.method == 'POST':
@@ -206,7 +207,7 @@ def machine(request):
 
     return render(request, 'epani/machine.html')
 
-
+@login_required(login_url='login')
 def edit_card(request):
 
     card_number = request.GET['card_number']
@@ -238,7 +239,7 @@ def edit_card(request):
 
     return render(request, 'epani/edit_card.html', context)
 
-
+@login_required(login_url='login')
 def users(request):
     filter = request.GET['filter']
     if request.user.is_admin:
@@ -260,7 +261,7 @@ def users(request):
 
         return render(request, 'accounts/users.html', context)
 
-
+@login_required(login_url='login')
 def edit_machine(request):
     mac_id = request.GET['machine_id']
 
@@ -296,7 +297,7 @@ def edit_machine(request):
     }
     return render(request, 'epani/edit_machine.html', context)
 
-
+@login_required(login_url='login')
 def edit_user(request):
 
     id = request.GET['id']
@@ -344,7 +345,7 @@ def edit_user(request):
 
     return render(request, 'accounts/edit_user.html', context)
 
-
+@login_required(login_url='login')
 def clusters(request):
     if request.user.is_admin:
         clusters = Cluster.objects.all()
@@ -384,6 +385,7 @@ def new_cluster(request):
 
     return render(request, 'epani/new_cluster.html',context)
 
+@login_required(login_url='login')
 def edit_cluster(request):
     c_id = request.GET['id']
 
@@ -418,7 +420,7 @@ def edit_cluster(request):
     }
     return render(request, 'epani/edit_cluster.html', context)
 
-
+@login_required(login_url='login')
 def cluster(request):
     c_id = request.GET['id']
     cluster = Cluster.objects.get(id=c_id)
